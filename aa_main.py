@@ -3,6 +3,11 @@
 
 """
 
+__author__ = "Patrik Lechner, https://github.com/hrtlacek"
+__version__ = "1.0.0"
+__license__ = "MIT"
+
+
 
 audioOn = True
 global playStop
@@ -76,8 +81,7 @@ win.resize(1000, 500)
 win.setWindowTitle('pyqtgraph example: dockarea')
 
 
-f = '/root/Documents/MATLAB/data/drumLoopMono.flac'
-# f = '/root/Documents/MATLAB/data/pereUbu.wav'
+f = 'demo.flac'
 
 def loadAndAnalyze(f):
     global x,sr,nyq,numSamps,absSpec,numFrames, numFreqs, scale, drawSpec
