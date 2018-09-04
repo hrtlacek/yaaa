@@ -121,7 +121,6 @@ def load():
     loadAndAnalyze(f)
     newFile(f)
 
-saveBtn.clicked.connect(save)
 loadFileBtn.clicked.connect(load)
 
 # ================TIME DOMAIN Complete======================
