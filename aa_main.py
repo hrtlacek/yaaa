@@ -261,13 +261,11 @@ def updatePlaybarS():
 
 
 def formatForTable(cols):
-    numCols = len(cols)
     numRows = len(cols[0])
     preList = []
     for i in range(numRows):
         thisRow = (cols[0][i], cols[1][i])
         preList.append(thisRow)
-    data = np.array(preList, dtype=[('Freqs', float), ('Amps', float)])
     return preList
 
 def updatePeaks(data):
@@ -289,7 +287,7 @@ playBarS.sigDragged.connect(updatePlaybarS)
 
 # AUDIIO PROCESSING
 if audioOn:
-    from pyo import *
+    from pyo import Server,Granulator,Sig,SndTable,HannTable,Trig,Phasor,Noise,OscTrig
     s = Server(audio='jack')
     s.boot()
     s.start()
@@ -319,7 +317,7 @@ def newFile(f):
     p3.setData(x)
 
 def update():
-    global playbar, playBarS,playStop, mainPlayer,phase,scale
+    global playBarS,playStop, mainPlayer,phase,scale
     if playStop==1:
         p = phase.get()*numSamps
         playBarPlaying.setValue(p)
