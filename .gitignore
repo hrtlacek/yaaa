@@ -1,0 +1,5 @@
+*.code-workspace
+num.flac
+__pycache__
+.vscode
+tests.py
