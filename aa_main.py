@@ -14,7 +14,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.console
 import numpy as np
 import logging
-import audio as au
+# import audio as au
 
 import audioHelpers as auh
 
@@ -81,12 +81,12 @@ f = '/root/Documents/MATLAB/data/drumLoopMono.flac'
 
 def loadAndAnalyze(f):
     global x,sr,nyq,numSamps,absSpec,numFrames, numFreqs, scale, drawSpec
-    x,sr = au.simpleLoad(f, mono=True)
+    x,sr = auh.simpleLoad(f, mono=True)
     nyq = sr/2
     numSamps = len(x)
     fs = 2**14
     overlap = int(fs*0.98)
-    absSpec = np.clip(au.aToDb(abs(au.stft(x, frameSize=fs , overlap=overlap))),-100,100)
+    absSpec = np.clip(auh.aToDb(abs(auh.stft(x, frameSize=fs , overlap=overlap))),-100,100)
     # absSpecLin = au.dBToA(absSpec)
     # smooSpec = np.zeros_like(absSpec)
     # smooSpec = au.octaveSmooth(absSpec,3,sr)
