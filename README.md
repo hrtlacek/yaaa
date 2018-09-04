@@ -27,6 +27,23 @@ Loading long soundfiles might take a while.
 
 The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC.
 
+These dependencies are probably best installed via conda (https://conda.io/docs/user-guide/install/download.html)
+
+### Installation via conda
+- [optional] Create a new envirmonment: ```conda create -n yaaa python=3.6```
+- ```conda install pyqtgraph```
+- ```conda install scipy```
+- ```conda install -c conda-forge librosa```
+- follow instructions here: 
+    http://ajaxsoundstudio.com/pyodoc/download.html
+    But if you are on linux, compile from sources with instructions here:
+    http://ajaxsoundstudio.com/pyodoc/compiling.html
+- installatioon of tkinter is probably best done via ```apt-get install python-tk``` on debian based linux systems.
+
+That should be it. After that, you should be able to
+(activate your new environment via ```source activate yaaa``` in case you created one)
+and start the yaaa executeable. 
+
 ## Future ideas
 - Command line mode: Open yaaa with command line flags, such as a startup file and cropping that file etc.
 - Adjustment of peak finding algorithm via GUI
