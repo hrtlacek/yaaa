@@ -4,7 +4,7 @@
 YAAA (Yet Another Audio Analyzer) is a simple program written in python. It is still under development.
 ![interface screen shot](./img/main.png)
 
-The idea is having a very simple powerful program to look at an audio singnal's time and frequency domain data interactively.\\
+The idea is having a very simple powerful program to look at an audio singnal's time and frequency domain data interactively.
 
 
 Using pyo, yaaa is able to play back sound, but also provides a granular sampling engine, so one can scrub through the sound. Pyqtgraph provides a very powerful interface that supports rapid updates.
@@ -23,6 +23,7 @@ Loading long soundfiles might take a while.
 - numpy
 - scipy
 - librosa
+- tkinter
 
 The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC.
 
