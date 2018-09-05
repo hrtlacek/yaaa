@@ -44,7 +44,20 @@ That should be it. After that, you should be able to
 (activate your new environment via ```source activate yaaa``` in case you created one)
 and start the yaaa executeable. 
 
+Yaaa has a simple command line interface as shown below. But it can also simply be started and a new file can be loaded via the GUI. 
+```
+usage: yaaa [-h] [-f F] [-c C] [-o O]
+
+Yet Another Audio Analyzer.
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -f F        file to open
+  -c C        provide a number of seconds to extract from the file
+  -o O        provide a number of seconds as an offset from the beginning.
+```
+
+
 ## Future ideas
-- Command line mode: Open yaaa with command line flags, such as a startup file and cropping that file etc.
 - Adjustment of peak finding algorithm via GUI
 - decay rate computation of spectral peaks
