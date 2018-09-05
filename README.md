@@ -61,3 +61,8 @@ optional arguments:
 ## Future ideas
 - Adjustment of peak finding algorithm via GUI
 - decay rate computation of spectral peaks
+
+## Known Issues
+- Can get pretty slow for large files. This tool is thought for analysis of impulse responses or other small portions of audio. probably automatic cropping will be introduced.
+- Installation should get easier
+- There is probably a bug for out of bound indizes when cropping or offestting via the CLI. Simple sanity checks need to be introduced.
