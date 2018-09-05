@@ -12,6 +12,8 @@ audioOn = True
 global playStop
 playStop = 0
 
+import argparse
+
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.console
@@ -22,7 +24,41 @@ from pyqtgraph.dockarea import *
 import tkinter as tk
 from tkinter import filedialog
 
+import sys,os
+
 logging.basicConfig(level=logging.DEBUG)
+
+parser = argparse.ArgumentParser(description='Yet Another Audio Analyzer.')
+parser.add_argument('-f', nargs=1, help='file to open', )
+parser.add_argument('-c', nargs=1, help='provide a number of seconds to extract from the file')
+parser.add_argument(
+    '-o', nargs=1, help='provide a number of seconds as an offset from the beginning.')
+
+args = parser.parse_args()
+
+crop = False
+offset = False
+offsetSec=0
+
+if args.f == None:
+    f = 'demo.flac'
+else:
+    providedPath = args.f[0]
+    ap = os.path.abspath(providedPath)
+    if os.path.exists(ap):
+        f=ap
+
+if args.c != None: 
+    crop=True
+    cropSec = float(args.c[0])
+
+if args.o != None:
+    offset=True
+    offsetSec = float(args.o[0])
+
+logging.debug(str(args))
+logging.debug(str(cropSec))
+
 
 class KeyPressWindow(QtGui.QMainWindow):
     sigKeyPress = QtCore.pyqtSignal(object)
@@ -52,6 +88,27 @@ def keyPressed(evt):
             mainPlayerAmp.setValue(0.)
             gMul.setValue(1)
 
+def loadAndAnalyze(f):
+    global x, sr, nyq, numSamps, absSpec, numFrames, numFreqs, scale, drawSpec
+    x, sr = auh.simpleLoad(f, mono=True)
+    if offset:
+        offsetSamps = int(offsetSec*sr)
+        x=x[offsetSamps:]
+    if crop:
+        cropSamps = int(cropSec*sr)
+        x=x[:cropSamps]
+    nyq = sr/2
+    numSamps = len(x)
+    fs = 2**14
+    overlap = int(fs*0.98)
+    absSpec = np.clip(
+        auh.aToDb(abs(auh.stft(x, frameSize=fs, overlap=overlap))), -100, 100)
+    numFrames = absSpec.shape[1]
+    numFreqs = absSpec.shape[0]
+    scale = numFreqs/numFrames
+    drawSpec = absSpec
+    return
+
 QtGui.QApplication.setGraphicsSystem('raster')
 pg.setConfigOptions(antialias=True)
 
@@ -63,26 +120,7 @@ win.setCentralWidget(area)
 win.resize(1000, 500)
 win.setWindowTitle('pyqtgraph example: dockarea')
 
-
-f = 'demo.flac'
-
-def loadAndAnalyze(f):
-    global x,sr,nyq,numSamps,absSpec,numFrames, numFreqs, scale, drawSpec
-    x,sr = auh.simpleLoad(f, mono=True)
-    nyq = sr/2
-    numSamps = len(x)
-    fs = 2**14
-    overlap = int(fs*0.98)
-    absSpec = np.clip(auh.aToDb(abs(auh.stft(x, frameSize=fs , overlap=overlap))),-100,100)
-    numFrames=absSpec.shape[1]
-    numFreqs = absSpec.shape[0]
-    scale = numFreqs/numFrames
-    drawSpec = absSpec
-    return
-
 loadAndAnalyze(f)
-
-
 
 ## Create docks, place them into the window one at a time.
 d1 = Dock("Dock1", size=(100, 10))  # give this dock the minimum possible size
@@ -101,7 +139,6 @@ area.addDock(d5, 'bottom', d3)  # place d5 at left edge of d1
 area.addDock(d4, 'right', d5)  # place d4 at right edge of dock area
 area.addDock(d6, 'right', d3)  # place d5 at top edge of d4
 area.addDock(d7, 'above', d4)
-
 
 ## Add widgets into each dock
 
@@ -226,8 +263,6 @@ win.show()
 w7 = pg.TableWidget()
 d7.addWidget(w7)
 
-
-
 # CALLBACKS
 def updatePlaybar():
     global playBar,p6,x, playpos,playBarS, thisFrame, scale
@@ -235,7 +270,7 @@ def updatePlaybar():
     thisFrame = int((v/numSamps)*numFrames)
     thisFrame = np.clip(thisFrame, 0, numFrames-1)
     if audioOn:
-        playpos.setValue(v)
+        playpos.setValue(v+offsetSec*sr)
         playBarS.setValue(thisFrame*scale)
     v = max(v,0)
     p6.setData(x[int(v):int(v+1000)])
@@ -251,7 +286,7 @@ def updatePlaybarS():
     v = (v/numFrames)*numSamps
     v = max(v,0)
     if audioOn:
-        playpos.setValue(v)
+        playpos.setValue(v+offsetSec*sr)
         playBar.setValue(v) 
     p6.setData(x[int(v):int(v+1000)])
     xAxis = np.linspace(0,sr/2,numFreqs)
@@ -284,7 +319,6 @@ def updatePeaks(data):
 
 playBar.sigDragged.connect(updatePlaybar)
 playBarS.sigDragged.connect(updatePlaybarS)
-
 
 # AUDIIO PROCESSING
 if audioOn:
