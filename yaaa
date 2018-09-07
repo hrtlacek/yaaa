@@ -56,8 +56,8 @@ if args.o != None:
     offset=True
     offsetSec = float(args.o[0])
 
-logging.debug(str(args))
-logging.debug(str(cropSec))
+# logging.debug(str(args))
+# logging.debug(str(cropSec))
 
 
 class KeyPressWindow(QtGui.QMainWindow):
