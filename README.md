@@ -24,6 +24,7 @@ Loading long soundfiles might take a while.
 - scipy
 - librosa
 - tkinter
+- numba
 
 The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC.
 
@@ -33,6 +34,7 @@ These dependencies are probably best installed via conda (https://conda.io/docs/
 - [optional] Create a new envirmonment: ```conda create -n yaaa python=3.6```
 - ```conda install pyqtgraph```
 - ```conda install scipy```
+- ```conda install numba```
 - ```conda install -c conda-forge librosa```
 - follow instructions here: 
     http://ajaxsoundstudio.com/pyodoc/download.html
