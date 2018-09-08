@@ -24,6 +24,8 @@ from pyqtgraph.dockarea import *
 import tkinter as tk
 from tkinter import filedialog
 
+import audio as au
+
 import sys,os
 
 logging.basicConfig(level=logging.DEBUG)
@@ -89,7 +91,7 @@ def keyPressed(evt):
             gMul.setValue(1)
 
 def loadAndAnalyze(f):
-    global x, sr, nyq, numSamps, absSpec, numFrames, numFreqs, scale, drawSpec
+    global x, sr, nyq, numSamps, absSpec, numFrames, numFreqs, scale, drawSpec, smoothSpec
     x, sr = auh.simpleLoad(f, mono=True)
     if offset:
         offsetSamps = int(offsetSec*sr)
@@ -103,8 +105,16 @@ def loadAndAnalyze(f):
     overlap = int(fs*0.98)
     absSpec = np.clip(
         auh.aToDb(abs(auh.stft(x, frameSize=fs, overlap=overlap))), -100, 100)
+    # linSpec = abs(auh.stft(x, frameSize=fs, overlap=overlap))
+    smoothSpec = np.zeros_like(absSpec)
+    
     numFrames = absSpec.shape[1]
     numFreqs = absSpec.shape[0]
+
+    for i in range(numFrames):
+        smoothFrame = auh.octaveSmooth(absSpec[:,i],4,sr)
+        smoothSpec[:,i] = smoothFrame
+
     scale = numFreqs/numFrames
     drawSpec = absSpec
     return
@@ -189,12 +199,15 @@ d3.addWidget(w3)
 # ==============Spec Crurrent=======================
 w4 = pg.PlotWidget(title="Spectrum")
 pi4 = w4.getPlotItem()
-pi4.setLimits(xMin=1, xMax=np.log10(sr/2))
+# pi4.setLimits(maxXRange=1000, xMin=0, xMax=999, yMin=-1, yMax=1)
+pi4.setLimits(yMin=-100,xMin=1, xMax=np.log10(sr/2))
 
 w4.showGrid(x=True, y=True)
 w4.setLogMode(x=True, y=None)
 xAxis = np.linspace(0,sr/2,numFreqs)
 p4 = w4.plot(xAxis, drawSpec[:, 0])
+
+p4s = w4.plot(xAxis, smoothSpec[:, 0], pen=(255, 0, 0))
 d4.addWidget(w4)
 
 #--crosshair
@@ -276,6 +289,7 @@ def updatePlaybar():
     p6.setData(x[int(v):int(v+1000)])
     xAxis = np.linspace(0,sr/2,numFreqs)
     p4.setData(xAxis, drawSpec[:,thisFrame])
+    p4s.setData(xAxis, smoothSpec[:, thisFrame])
     updatePeaks(drawSpec[:, thisFrame])
     return
 
@@ -292,6 +306,8 @@ def updatePlaybarS():
     xAxis = np.linspace(0,sr/2,numFreqs)
     data = drawSpec[:, thisFrame]
     p4.setData(xAxis,data)
+    p4s.setData(xAxis, smoothSpec[:, thisFrame])
+
     updatePeaks(data)
     return
 
@@ -366,6 +382,7 @@ def update():
         p6.setData(x[int(v):int(v+1000)])
         xAxis = np.linspace(0,sr/2,numFreqs)
         p4.setData(xAxis, drawSpec[:,thisFrame])
+        p4s.setData(xAxis, smoothSpec[:, thisFrame])
         updatePeaks(drawSpec[:, thisFrame])
 
 timer = QtCore.QTimer()
