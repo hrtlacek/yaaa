@@ -105,7 +105,6 @@ def loadAndAnalyze(f):
     overlap = int(fs*0.98)
     absSpec = np.clip(
         auh.aToDb(abs(auh.stft(x, frameSize=fs, overlap=overlap))), -100, 100)
-    # linSpec = abs(auh.stft(x, frameSize=fs, overlap=overlap))
     smoothSpec = np.zeros_like(absSpec)
     
     numFrames = absSpec.shape[1]
@@ -195,12 +194,38 @@ w3.showGrid(x=True, y=True)
 p3 = w3.plot(x)
 d3.addWidget(w3)
 
+# ==================Time domain current====================
+w6 = pg.PlotWidget(title="Time Domain")
+p6 = w6.plot(np.zeros([0]))
+pi6 = w6.getPlotItem()
+pi6.setLimits(maxXRange=1000, xMin=0, xMax=999, yMin=-1, yMax=1)
+d6.addWidget(w6)
+w6.showGrid(x=True, y=True)
+
+
+# ==============SPECTRIGRAM-Complete=========================
+w5 = pg.ImageView()
+ii = w5.getImageItem()
+ii.setAutoDownsample(True)
+vbS = w5.getView()
+scale = numFreqs/numFrames
+w5.setImage(np.flip(auh.makeLogSpec(absSpec).T, axis=1),
+            scale=[scale, 1])
+w5.setPredefinedGradient('flame')
+d5.addWidget(w5)
+d5.hideTitleBar()
+
+playBarS = pg.InfiniteLine(angle=90, movable=True, pen='g')
+vbS.addItem(playBarS)
+vbS.setMouseEnabled(x=False)  # makes user interaction a little easier
+playBarS.setValue(0.8)
+playBarS.setZValue(1000)  # bring iso line above contrast controls
+
 
 # ==============Spec Crurrent=======================
 w4 = pg.PlotWidget(title="Spectrum")
 pi4 = w4.getPlotItem()
-# pi4.setLimits(maxXRange=1000, xMin=0, xMax=999, yMin=-1, yMax=1)
-pi4.setLimits(yMin=-100,xMin=1, xMax=np.log10(sr/2))
+pi4.setLimits(yMin=-100, yMax=100, xMin=1, xMax=np.log10(sr/2))
 
 w4.showGrid(x=True, y=True)
 w4.setLogMode(x=True, y=None)
@@ -244,32 +269,6 @@ def mouseMoved(evt):
 
 pi4.scene().sigMouseMoved.connect(mouseMoved)
 
-# ==============SPECTRIGRAM-Complete=========================
-w5 = pg.ImageView()
-ii = w5.getImageItem()
-ii.setAutoDownsample(True)
-vbS = w5.getView()
-scale = numFreqs/numFrames
-w5.setImage(np.flip(auh.makeLogSpec(absSpec).T, axis=1),
-            scale=[scale, 1])
-w5.setPredefinedGradient('flame')
-d5.addWidget(w5)
-d5.hideTitleBar()
-
-playBarS = pg.InfiniteLine(angle=90, movable=True, pen='g')
-vbS.addItem(playBarS)
-vbS.setMouseEnabled(x=False) # makes user interaction a little easier
-playBarS.setValue(0.8)
-playBarS.setZValue(1000) # bring iso line above contrast controls
-
-
-# ==================Time domain current====================
-w6 = pg.PlotWidget(title="Time Domain")
-p6 = w6.plot(np.zeros([0]))
-pi6 = w6.getPlotItem()
-pi6.setLimits(maxXRange=1000, xMin=0, xMax=999, yMin=-1, yMax=1)
-d6.addWidget(w6)
-w6.showGrid(x=True, y=True)
 
 win.show()
 
