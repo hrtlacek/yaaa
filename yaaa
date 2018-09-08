@@ -13,7 +13,6 @@ global playStop
 playStop = 0
 
 import argparse
-
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.console
@@ -23,8 +22,6 @@ import audioHelpers as auh
 from pyqtgraph.dockarea import *
 import tkinter as tk
 from tkinter import filedialog
-# import audio as au
-
 import sys,os
 
 logging.basicConfig(level=logging.DEBUG)
@@ -216,7 +213,6 @@ vbS.setMouseEnabled(x=False)  # makes user interaction a little easier
 playBarS.setValue(0.8)
 playBarS.setZValue(1000)  # bring iso line above contrast controls
 
-
 # ==============Spec Crurrent=======================
 w4 = pg.PlotWidget(title="Spectrum")
 pi4 = w4.getPlotItem()
@@ -263,7 +259,6 @@ def mouseMoved(evt):
         hLine.setPos(mousePoint.y())
 
 pi4.scene().sigMouseMoved.connect(mouseMoved)
-
 
 win.show()
 
@@ -314,6 +309,7 @@ def formatForTable(cols):
         preList.append(thisRow)
     return preList
 
+
 def updatePeaks(data):
     global s1, w7
     indizes = auh.getPeaks(data)
@@ -360,6 +356,7 @@ def newFile(f):
     mainPlayer.setFreq(snd.getRate())
     w5.setImage(np.flip(auh.makeLogSpec(absSpec).T, axis=1), autoRange=True)
     p3.setData(x)
+
 
 def update():
     global playBarS,playStop, mainPlayer,phase,scale

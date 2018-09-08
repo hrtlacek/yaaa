@@ -63,7 +63,7 @@ def simpleLoad(path, mono=False, resample=False, sr=None, normalize=None, normal
 # =  MATLAB TRanslation Helpers    =
 # ==================================*/
 
-
+@jit
 def isempty(x):
     if len(x) == 0:
         return True
@@ -71,6 +71,7 @@ def isempty(x):
         return False
 
 
+@jit
 def mlFind(func, n, direction):
     if direction != 'last':
         if n != 0:
@@ -85,13 +86,9 @@ def mlFind(func, n, direction):
 
 # ======================================================================
 
-
 def octaveSmooth(spectrum, Noct, sr):
     """Spectrum Octave Smoother
-
     1/N octave smoother. Very efficient. Original Source unkown.
-    Translation of old matlab FFT eqtool spec smoother.
-
     Arguments:
         spectrum {np.array} -- Input Magnitude spectrum (linear)
         Noct {float} -- smoothing amount. Lower numbers produce more smoothing.
@@ -145,11 +142,7 @@ def octaveSmooth(spectrum, Noct, sr):
             Px_i = Px[int(fe[i]):1 + int(fe[i + 1])]
             Px_oct[i] = np.mean(Px_i, axis=0)
 
-
-#         print(min(fc))
         fc = fc[1:]
-
-        #         print(min(freq))
         fc = np.insert(fc, 0, 0)
         Px_oct = np.insert(Px_oct, 0, Px[1])
         interpolator = interp1d(fc, Px_oct, kind='cubic', bounds_error=True)
@@ -172,7 +165,7 @@ def dBToA(X):
     """Given a np.array calculates linear from dB values"""
     P1 = 10.**(X/20.)
     return P1
-
+@jit
 def getRms(x):
     """check this for stereo"""
     return np.sqrt(np.mean(x**2., axis=0))
