@@ -13,8 +13,6 @@ A peak finding algorithm (written by Marcos Duarte) is used to extract and displ
 
 ## Usage
 This is still in a very early stage of development, and has just been tested under linux. Since it is based on python, it should work under other platforms too.
-Loading long soundfiles might take a while.
-
 
 ### Dependencies
 - python 3.6
@@ -23,15 +21,13 @@ Loading long soundfiles might take a while.
 - numpy
 - scipy
 - librosa
-- tkinter
 - numba
 
-The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC.
+The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC and is included.
 
 These dependencies are probably best installed via conda (https://conda.io/docs/user-guide/install/download.html)
 
 ### Installation via conda
-- [optional] Create a new envirmonment: ```conda create -n yaaa python=3.6```
 - ```conda install pyqtgraph```
 - ```conda install scipy```
 - ```conda install numba```
@@ -40,11 +36,8 @@ These dependencies are probably best installed via conda (https://conda.io/docs/
     http://ajaxsoundstudio.com/pyodoc/download.html
     But if you are on linux, compile from sources with instructions here:
     http://ajaxsoundstudio.com/pyodoc/compiling.html
-- installatioon of tkinter is probably best done via ```apt-get install python-tk``` on debian based linux systems.
 
-That should be it. After that, you should be able to
-(activate your new environment via ```source activate yaaa``` in case you created one)
-and start the yaaa executeable. 
+That should be it. After that, you should be able to start the yaaa executeable. 
 
 Yaaa has a simple command line interface as shown below. But it can also simply be started and a new file can be loaded via the GUI. 
 ```
@@ -58,7 +51,6 @@ optional arguments:
   -c C        provide a number of seconds to extract from the file
   -o O        provide a number of seconds as an offset from the beginning.
 ```
-
 
 ## Future ideas
 - Adjustment of peak finding algorithm via GUI
