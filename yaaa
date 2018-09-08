@@ -23,8 +23,7 @@ import audioHelpers as auh
 from pyqtgraph.dockarea import *
 import tkinter as tk
 from tkinter import filedialog
-
-import audio as au
+# import audio as au
 
 import sys,os
 
@@ -57,10 +56,6 @@ if args.c != None:
 if args.o != None:
     offset=True
     offsetSec = float(args.o[0])
-
-# logging.debug(str(args))
-# logging.debug(str(cropSec))
-
 
 class KeyPressWindow(QtGui.QMainWindow):
     sigKeyPress = QtCore.pyqtSignal(object)
