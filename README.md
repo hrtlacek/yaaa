@@ -25,19 +25,31 @@ This is still in a very early stage of development, and has just been tested und
 
 The peak finding algorithm used here was created by Marcos Duarte, https://github.com/demotu/BMC and is included.
 
-These dependencies are probably best installed via conda (https://conda.io/docs/user-guide/install/download.html)
 
 ### Installation via conda
+Most of the dependencies can be installed via conda (https://conda.io/docs/user-guide/install/download.html)
 - ```conda install pyqtgraph```
 - ```conda install scipy```
 - ```conda install numba```
 - ```conda install -c conda-forge librosa```
-- follow instructions here: 
+
+- For Pyo follow the instructions here: 
     http://ajaxsoundstudio.com/pyodoc/download.html
     But if you are on linux, compile from sources with instructions here:
     http://ajaxsoundstudio.com/pyodoc/compiling.html
 
-That should be it. After that, you should be able to start the yaaa executeable. 
+That should be it. After that, you should be able to start the yaaa executeable from the terminal.
+
+On Linux and Mac it probably makes sense to create a symlink to yaaa:
+```ln -s /path/to/yaaa/yaaa /usr/bin/yaaa```
+
+If you have a specific conda environment with all the dependencies installed you will need to use that. A small function in the .bashrc (or similar) instead of the symlink can be used e.g.
+```
+yaaa(){
+    "path/to/my/envoronment/python" "path/to/yaaa/yaaa" "$@"
+
+}
+```
 
 Yaaa has a simple command line interface as shown below. But it can also simply be started and a new file can be loaded via the GUI. 
 ```

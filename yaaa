@@ -24,6 +24,8 @@ import tkinter as tk
 from tkinter import filedialog
 import sys,os
 
+thisDir = os.path.dirname(os.path.realpath(__file__))
+
 logging.basicConfig(level=logging.DEBUG)
 
 parser = argparse.ArgumentParser(description='Yet Another Audio Analyzer.')
@@ -39,7 +41,7 @@ offset = False
 offsetSec=0
 
 if args.f == None:
-    f = 'demo.flac'
+    f = os.path.join(thisDir,'audio/demo.flac')
 else:
     providedPath = args.f[0]
     ap = os.path.abspath(providedPath)
