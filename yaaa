@@ -14,7 +14,8 @@ playStop = 0
 
 import argparse
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtCore, QtGui
+# from PyQt6.QtWidgets import QApplication, QWidget
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph.console
 import numpy as np
 import logging
@@ -36,6 +37,14 @@ parser.add_argument(
 
 args = parser.parse_args()
 
+from pyo import Server,Granulator,Sig,SndTable,HannTable,Trig,Phasor,Noise,OscTrig, pa_get_default_output
+defOut = pa_get_default_output()
+# s = Server()
+s = Server(duplex=0)
+s.setOutputDevice(defOut)
+
+s.boot()
+
 crop = False
 offset = False
 offsetSec=0
@@ -56,7 +65,7 @@ if args.o != None:
     offset=True
     offsetSec = float(args.o[0])
 
-class KeyPressWindow(QtGui.QMainWindow):
+class KeyPressWindow(QtWidgets.QMainWindow):
     sigKeyPress = QtCore.pyqtSignal(object)
 
     def __init__(self, *args, **kwargs):
@@ -112,10 +121,11 @@ def loadAndAnalyze(f):
     drawSpec = absSpec
     return
 
-QtGui.QApplication.setGraphicsSystem('raster')
+# QtGui.QApplication.setGraphicsSystem('raster')
 pg.setConfigOptions(antialias=True)
 
-app = QtGui.QApplication([])
+# app = QtGui.QGuiApplication([])
+app = QtWidgets.QApplication([]) #QtWidgets.QAppl
 win = KeyPressWindow()
 win.sigKeyPress.connect(keyPressed)
 area = DockArea()
@@ -147,8 +157,8 @@ area.addDock(d7, 'above', d4)
 
 ## first dock gets save/restore buttons
 w1 = pg.LayoutWidget()
-saveBtn = QtGui.QPushButton('Save dock state')
-loadFileBtn = QtGui.QPushButton('Load File')
+saveBtn = QtWidgets.QPushButton('Save dock state')
+loadFileBtn = QtWidgets.QPushButton('Load File')
 w1.addWidget(loadFileBtn, row=2, col=0)
 d1.addWidget(w1)
 d1.hideTitleBar()
@@ -328,11 +338,11 @@ def updatePeaks(data):
 playBar.sigDragged.connect(updatePlaybar)
 playBarS.sigDragged.connect(updatePlaybarS)
 
-# AUDIIO PROCESSING
+# AUDIO PROCESSING
 if audioOn:
-    from pyo import Server,Granulator,Sig,SndTable,HannTable,Trig,Phasor,Noise,OscTrig
-    s = Server(audio='jack')
-    s.boot()
+    # from pyo import Server,Granulator,Sig,SndTable,HannTable,Trig,Phasor,Noise,OscTrig
+    # s = Server(audio='jack')
+    # s.boot()
     s.start()
     playpos = Sig(0)
     snd = SndTable(f)
@@ -384,6 +394,8 @@ timer.start(50)
 
 ## Start Qt event loop unless running in interactive mode or using pyside.
 if __name__ == '__main__':
-    import sys
-    if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
+    app.exec()
+    # import sys
+    # if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
+    #     # QtGui.QApplication.instance().exec_()
+    #     QtWidgets.QApplication.instance().exec_()
