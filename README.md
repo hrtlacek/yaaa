@@ -14,6 +14,16 @@ A peak finding algorithm (written by Marcos Duarte) is used to extract and displ
 ## Usage
 This is still in a very early stage of development, and has just been tested under linux. Since it is based on python, it should work under other platforms too.
 
+## Installation 
+Use pipenv to install dependencies and run yaaa:
+- install pipenv
+- clone the repository
+- cd into its directory
+- use pipenv to install dependencies: ```pipenv install --ignore-pipfile```
+- run: ```pipenv python ./yaaa```
+
+## Insatllation (old, but should work alternatively)
+
 ### Dependencies
 - python 3.6
 - pyqtgraph
